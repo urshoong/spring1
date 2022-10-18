@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- multiple 속성값을 주면 여러개의 파일을 한번에 업로드 할 수 있다 -->
+<input id="upload" type="file" multiple/>
+
+<button class="uploadBtn">UPLOAD</button>
+
+<div class="uploadResult">
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+    async function uploadServer(formObj){
+
+        const res = await axios({
+            method: 'post',
+            url: '/upload',
+            data: formObj,
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        })
+
+        return res.data
+
+    }
+
+    const uploadResult = document.querySelector('.uploadResult')
+
+    document.querySelector('.uploadBtn').addEventListener('click', (e) => {
+
+        const formData = new FormData()
+
+        const fileInput = document.querySelector('#upload')
+
+        console.log(fileInput)
+
+        const files = fileInput.files;
+
+        //element의 files 속성을 보면 어떤 파일이 있는지 확인 할 수 있다
+        console.log(files)
+
+        for(let i = 0; i < files.length; i++){
+          formData.append("files", files[i])
+        }//end for
+
+        uploadServer(formData).then(data => {
+            console.log(data)
+
+            let str = ''
+
+            for (let i = 0; i < data.length; i++) {
+                const {fileName, fullName, uuid, image} = data
+                str += `<img src="/display?name=s_${fullName}"/>`
+            }
+
+            uploadResult.innerHTML = str
+        })
+
+    }, false)
+</script>
+
+</body>
+</html>

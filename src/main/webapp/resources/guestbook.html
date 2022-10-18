@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  //API 혹은 Service 라고 부른다
+  const guestService = (function (){
+    const postAdd = async (book) => {
+        const data = await axios.post('http://localhost:8080/ex2', book)
+        return data
+    }
+
+    const getList = async () => {
+        const {data} = await axios.get("http://localhost:8080/exList")
+        console.log(data)
+        return data
+    }
+
+    const getRead = async (tno) => {
+        const {data} = await axios.get(`http://localhost:8080/exRead/${tno}`)
+        console.log(data)
+        return data
+    }
+
+    return { postAdd, getList, getRead }
+  })();
+
+  // const obj = {title:'AAA', memo:'BBB', writer:'user0', dueDate:'2022-10-13'}
+  // guestService.postAdd(obj)
+
+  // guestService.getList()
+
+  guestService.getRead(10000000)
+
+</script>
+</body>
+</html>
